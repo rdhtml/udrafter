@@ -20,3 +20,33 @@ h4 {
 .business-student-status .updated {
     cursor: pointer;
 }
+
+
+/*==============================*/
+
+
+/*   Mobile Styles */
+@media (max-width: 480px) {
+
+    h4 {
+        margin: 5px 5px 5px;
+        font-size: 1.15em !important;
+    }
+
+    .card-body {
+        padding: 0 !important;
+    }
+
+    .business-student-status-container .updated-by,
+    .business-student-status-container .updated,
+    .print-window {
+        display: none !important;
+    }
+
+
+    .business-student-status,
+    .business-student-status-header {
+        border-bottom: 1px solid #ddd;
+    }
+    
+}

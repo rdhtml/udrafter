@@ -30,7 +30,9 @@
                         @foreach($businessStudentStatuses as $businessStudentStatus)
                             <div class="business-student-status col-md-12">
 
-                                <div class="col-md-5 col-sm-5 float-md-left">{{$businessStudentStatus->student->name}}</div>
+                                <div class="col-md-5 col-sm-5 float-md-left">
+                                    <i class="fas fa-user-graduate"></i> {{$businessStudentStatus->student->name}}
+                                </div>
 
                                 <div class="col-md-2 col-sm-2 float-md-left">
                                     <select class="job-status" id="job-status-{{$businessStudentStatus->student_id}}"
