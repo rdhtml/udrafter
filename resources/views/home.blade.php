@@ -18,54 +18,52 @@
 
                     <h4>{{ucwords(trans('messages.student_job_suitability'))}}</h4>
 
-                    <table class="table table-responsive" id="cook">
+                    <div class="business-student-status-container">
 
-                        <thead>
-                            <th class="col-md-4">{{ucfirst(trans('messages.student'))}}</th>
-                            <th class="col-md-2">{{ucfirst(trans('messages.status'))}}</th>
-                            <th class="col-md-3">{{ucwords(trans('messages.last_updated'))}}</th>
-                            <th class="col-md-3">{{ucwords(trans('messages.updated_by'))}}</th>
-                        </thead>
+                        <div class="business-student-status-header col-md-12">
+                            <div class="col-md-5 col-sm-5 float-md-left">{{ucfirst(trans('messages.student'))}}</div>
+                            <div class="col-md-2 col-sm-2 float-md-left">{{ucfirst(trans('messages.status'))}}</div>
+                            <div class="col-md-2 col-sm-2 float-md-left updated">{{ucwords(trans('messages.last_updated'))}}</div>
+                            <div class="col-md-3 col-sm-3 float-md-left updated-by">{{ucwords(trans('messages.updated_by'))}}</div>
+                        </div>
 
-                        <tbody>
+                        @foreach($businessStudentStatuses as $businessStudentStatus)
+                            <div class="business-student-status col-md-12">
 
-                            @foreach($businessStudentStatuses as $businessStudentStatus)
-                                <tr class="business-student-status col-md-12">
+                                <div class="col-md-5 col-sm-5 float-md-left">{{$businessStudentStatus->student->name}}</div>
 
-                                    <td class="col-md-4">
-                                        {{$businessStudentStatus->student->name}}
-                                    </td>
+                                <div class="col-md-2 col-sm-2 float-md-left">
+                                    <select class="job-status" id="job-status-{{$businessStudentStatus->student_id}}"
+                                            data-business-id="{{$businessStudentStatus->business_id}}"
+                                            data-student-id="{{$businessStudentStatus->student_id}}"
+                                            data-employee-id="{{$employee->id}}"
+                                    >
+                                        @foreach($jobStatuses as $jobStatusId => $jobStatus)
+                                           <option value="{{$jobStatusId}}"
+                                           {{( $jobStatusId == $businessStudentStatus->status_id) ? 'selected' : '' }}
+                                           >{{ucfirst($jobStatus)}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                                    <td class="col-md-2">
-                                        <select class="job-status" id="job-status-{{$businessStudentStatus->student_id}}"
-                                                data-business-id="{{$businessStudentStatus->business_id}}"
-                                                data-student-id="{{$businessStudentStatus->student_id}}"
-                                                data-employee-id="{{$employee->id}}"
-                                        >
-                                            @foreach($jobStatuses as $jobStatusId => $jobStatus)
-                                               <option value="{{$jobStatusId}}"
-                                               {{( $jobStatusId == $businessStudentStatus->status_id) ? 'selected' : '' }}
-                                               >{{ucfirst($jobStatus)}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
+                                <div class="col-md-2 col-sm-2 float-md-left updated" id="updated-{{$businessStudentStatus->student_id}}"
+                                     title="{{dateFormattingWithTime($businessStudentStatus)}}">
+                                    {{dateFormatting($businessStudentStatus)}}
+                                </div>
 
-                                    <td class="col-md-3">
-                                        {{ $businessStudentStatus->updated_at->diffForHumans() }}
-                                    </td>
+                                <div class="col-md-3 col-sm-3 float-md-left updated-by" id="updated-by-{{$businessStudentStatus->student_id}}">
+                                    {{ $businessStudentStatus->employee->name }}
+                                </div>
 
-                                    <td class="col-md-3">
-                                        {{ $businessStudentStatus->employee->name }}
-                                    </td>
+                            </div>
+                        @endforeach
 
-                                </tr>
-                            @endforeach
-
-                        </tbody>
-
-                    </table>
+                    </div>
 
                 </div>
+
+                <button class="print-window btn btn-primary">Print</button>
+
             </div>
         </div>
     </div>
@@ -79,9 +77,9 @@
         var config = (function() {
             return {
                 updateStudentJobStatus: "{{ route('update.student.status')}}",
+                employeeName : "{{ $employee->name }}"
             }
         }());
-
 
         $(document).ready(function() {
 
@@ -113,10 +111,10 @@
                     url: config.updateStudentJobStatus,
                     success: function (data) {
 
-                        console.log(data);
-
                         if(data.state === 'success') {
                             toastr.success(data.message);
+                            $('#updated-by-' + student_id).html(config.employeeName);
+                            $('#updated-' + student_id).html('1s');
                         } else if(data.state === 'error') {
                             toastr.error(data.message);
                         }
@@ -126,7 +124,9 @@
 
             });
 
-
+            $('.print-window').click(function() {
+                window.print();
+            });
 
         });
 

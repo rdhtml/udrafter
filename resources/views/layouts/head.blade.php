@@ -13,4 +13,8 @@
 <!-- Styles -->
 <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 
+<link href="{{ asset('css/styles.css') }}" rel="stylesheet" type="text/css">
+
+<link href="{{ asset('css/print.css') }}" rel="stylesheet" media="print" type="text/css">
+
 <link href="{{ asset('css/app.css') }}" rel="stylesheet">
